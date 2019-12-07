@@ -1,0 +1,21 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Aula;
+
+import java.io.StringReader;
+import java.io.StringWriter;
+import javax.json.Json;
+import javax.json.stream.JsonGenerator;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParserFactory;
+
+/**
+ *
+ * @author professor
+ */
+public class CriaJsonB {
+
+}

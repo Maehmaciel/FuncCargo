@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<title>Cadastro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    .addFuncionario{
+        border: solid 1px;
+        display: inline;
+        padding: 5px;
+        
+    }
+    .funcionariosForm{
+       
+    }
+    .funcionario{
+        display:flex;
+        flex-direction: column;
+         width: 25vw;
+    }
+</style>
+<body onload="a()">
+
+<div class="w3-container" >
+  <h2>Empresa x</h2>
+
+  <div class="w3-row">
+    <a href="javascript:void(0)" onclick="openOp(event, 'Cadastrar');">
+      <div class="tablink  w3-border-red">Cadastrar</div>
+    </a>
+    <a href="javascript:void(0)" onclick="openOp(event, 'PesquisarTodos');">
+      <div class="tablink ">Todos os Cargos</div>
+    </a>
+    <a href="javascript:void(0)" onclick="openOp(event, 'PesquisarNome');">
+      <div class="tablink  ">Pesquisar por cargo</div>
+    </a>
+  </div>
+
+  <div id="Cadastrar" class="Op" style="display:none">
+    <h2>Cadastrar</h2>
+    <label for="cargo">Cargo</label>
+    <input type="text" id="cargo">
+    <label for="salario">Salario</label>
+    <input type="text" id="salario">
+    <div onclick="addFunc()" class="addFuncionario">+</div>
+    <input type="button" value="Cadastrar" onclick="cadastrar()">
+    
+    <div id="funcionariosForm">
+        
+    </div>
+  </div>
+
+  <div id="PesquisarTodos" class="Op" style="display:none">
+    <h2>Todos os cargos</h2>
+    <p></p> 
+  </div>
+
+  <div id="PesquisarNome" class="Op" style="display:none">
+       <h2>Pesquisa por Cargo</h2>
+     <label for="cargoPesquisar">Cargo:</label>
+    <input type="text" id="cargoPesquisar">
+  </div>
+</div>
+
+<script>
+    /*Funçoes ajax GET e POST*/
+    function criarAjaxGet(servlet, funcao)
+{
+    ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = funcao;
+    ajax.open("GET", servlet, true);
+    ajax.send();
+}
+
+    function criarAjaxPost(servlet, recurso)
+{
+
+
+    ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function () {
+
+        if (this.readyState == 4 && this.status == 200)
+        {
+            criarAjaxGet("/Controle", listarTodos)
+        }
+    }
+    ajax.open("POST", "/Controle", true);
+    ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    ajax.send("dados=" + recurso);
+    console.log(recurso)
+}
+
+
+function  listarTodos(){
+    /*Essa funçao ira receber o resultado da requisiçao GET - para listar todos os dados*/
+}
+    
+ /*Codigo que controla a vizualizaçao do conteudo entre as abas*/  
+    
+    function a(){
+        document.getElementById("Cadastrar").style.display = "block";
+    }
+function openOp(evt, OpName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("Op");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" w3-border-red", "");
+  }
+  document.getElementById(OpName).style.display = "block";
+  evt.currentTarget.firstElementChild.className += " w3-border-red";
+}
+
+/*i é o numero de funcionarios adicionados */
+i=0
+function addFunc(){
+    /*cria os inputs para um novo funcionario quando clickado no +*/
+    func=document.createElement('div')
+    func.className="funcionario"
+    nome=document.createElement('input');
+    nomeLabel=document.createElement('label');
+    telefone=document.createElement('input');
+    telefoneLabel=document.createElement('label');
+    nomeLabel.setAttribute("for","nome"+i)
+    nomeLabel.innerHTML="Nome:"
+    telefoneLabel.setAttribute("for","telefone"+i)
+    telefoneLabel.innerHTML="Telefone:"
+    nome.id="nome"+i
+    telefone.id="telefone"+i
+    func.appendChild(nomeLabel)
+    func.appendChild(nome)
+    func.appendChild(telefoneLabel)
+    func.appendChild(telefone)
+    func.appendChild(document.createElement('hr'))
+    document.getElementById('funcionariosForm').appendChild(func)
+    i++
+}
+
+          
+function cadastrar(){
+    /*Funçao chamada quando clicak em cadastrar*/
+    /*criando o objeto de cadastro que sera o JSON*/
+   cadastro= new Object()
+   /*Pegando o nome e o salario do cargo*/
+        cargo=document.getElementById('cargo')
+        salario=document.getElementById('salario')
+        /*pegando todos os campos de funcionarios adicionados*/
+        funcionarios=document.getElementsByClassName('funcionario')
+      
+      /*adicionando cargo e salario ao objeto*/
+               cadastro.cargo=cargo.value
+           
+               cadastro.salario=salario.value
+           
+           funcionario= []
+        for(j=0;j<i;j++){
+            /*percorrenco os inputs de funcionario e adicionando em um array*/
+           func=new Object()
+            nome=document.querySelector(`input#nome${j}`)
+            telefone=document.querySelector(`input#telefone${j}`)
+            func.nome=nome.value
+            func.telefone=telefone.value
+            funcionario.push=func
+            
+        }
+        /*adicionando o array de funcionarios ao objeto cadastro*/
+        cadastro.funcionarios=funcionario
+     console.log(cadastro)   
+    
+    criarAjaxPost('Controle',JSON.stringify(cadastro))
+    }
+     
+            
+      
+</script>
+
+</body>
+</html>

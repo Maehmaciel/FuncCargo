@@ -1,0 +1,12 @@
+create table cargo(
+id serial primary key,
+cargo text unique,
+salario numeric(10,2)
+
+);
+create table funcionario(
+id serial primary key,
+nome text,
+telefone text,
+cargo integer REFERENCES cargo(id)
+);
